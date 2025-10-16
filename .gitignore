@@ -1,36 +1,7 @@
-# Drupal
-web/sites/default/settings.php
-web/sites/default/files/
-web/sites/default/private/
-web/sites/*/settings.local.php
-
-# Composer
 vendor/
-composer.lock
-
-# Node.js
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Environment
+web/sites/default/files/
+web/sites/default/settings.local.php
+web/sites/default/settings.php
 .env
-.env.local
-
-# Temporary files
-*.tmp
-*.temp
+*.log
