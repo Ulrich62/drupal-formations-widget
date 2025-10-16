@@ -9,8 +9,7 @@
     },
     "ghcr.io/devcontainers/features/php:1": {
       "version": "8.2"
-    },
-    "ghcr.io/devcontainers/features/composer:1": {}
+    }
   },
   "customizations": {
     "vscode": {
@@ -39,7 +38,7 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "composer install && npm install",
+  "postCreateCommand": "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && composer install && npm install",
   "remoteUser": "www-data",
   "workspaceFolder": "/var/www/html"
 }
