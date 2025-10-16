@@ -1,0 +1,45 @@
+{
+  "name": "Drupal Formations Widget",
+  "image": "drupal:10-apache",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/php:1": {
+      "version": "8.2"
+    },
+    "ghcr.io/devcontainers/features/composer:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-json",
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "php.suggest.basic": false,
+        "intelephense.files.maxSize": 5000000
+      }
+    }
+  },
+  "forwardPorts": [8080, 3000],
+  "portsAttributes": {
+    "8080": {
+      "label": "Drupal Site",
+      "onAutoForward": "notify"
+    },
+    "3000": {
+      "label": "Development Server",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "composer install && npm install",
+  "remoteUser": "www-data",
+  "workspaceFolder": "/var/www/html"
+}
