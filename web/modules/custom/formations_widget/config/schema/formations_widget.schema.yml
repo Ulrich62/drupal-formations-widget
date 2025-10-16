@@ -1,0 +1,13 @@
+formations_widget.settings:
+  type: config_object
+  label: 'Formations Widget settings'
+  mapping:
+    oo2_basic_auth:
+      type: string
+      label: 'OO2 Basic Authorization (base64)'
+    mistral_api_key:
+      type: string
+      label: 'Mistral API Key'
+    llm_model:
+      type: string
+      label: 'Mistral model id'

@@ -1,0 +1,7 @@
+name: 'Formations Widget Theme'
+type: theme
+description: 'Simple theme for testing the formations widget'
+core_version_requirement: '^11'
+base theme: false
+libraries:
+  - formations_widget_theme/global-styling

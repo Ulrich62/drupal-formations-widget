@@ -1,0 +1,29 @@
+formations_widget.widget_js:
+  path: '/formations-widget/widget.js'
+  defaults:
+    _controller: '\Drupal\formations_widget\Controller\FormationsWidgetController::widgetJs'
+  requirements:
+    _permission: 'access content'
+
+formations_widget.embed:
+  path: '/formations-widget/embed'
+  defaults:
+    _controller: '\Drupal\formations_widget\Controller\FormationsWidgetController::embed'
+    _title: 'Formations Widget'
+  requirements:
+    _permission: 'access content'
+
+formations_widget.admin_settings:
+  path: '/admin/config/services/formations-widget'
+  defaults:
+    _form: '\Drupal\formations_widget\Form\SettingsForm'
+    _title: 'Formations Widget Settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+formations_widget.test_api:
+  path: '/formations-widget/test-api'
+  defaults:
+    _controller: '\Drupal\formations_widget\Controller\FormationsWidgetController::testApi'
+  requirements:
+    _permission: 'administer site configuration'

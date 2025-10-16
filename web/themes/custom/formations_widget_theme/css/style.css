@@ -1,0 +1,18 @@
+body {
+  background: linear-gradient(135deg, #87CEEB 0%, #98D8E8 100%);
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hello-world {
+  text-align: center;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  font-size: 3rem;
+  font-weight: bold;
+}

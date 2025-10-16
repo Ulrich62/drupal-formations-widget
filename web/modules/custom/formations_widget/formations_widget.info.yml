@@ -1,0 +1,7 @@
+name: 'Formations Widget'
+type: module
+description: 'Embeddable widget to expose OO2 formations/sessions with chat integration.'
+package: Custom
+core_version_requirement: '^11'
+dependencies:
+  - drupal:system

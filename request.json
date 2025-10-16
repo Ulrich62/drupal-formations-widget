@@ -1,0 +1,52 @@
+{
+    "contents": [
+        {
+            "role": "user",
+            "parts": [
+                {
+                    "text": "Quelles sont les formations en python disponibles?"
+                }
+            ]
+        }
+    ],
+    "generationConfig": {
+        "temperature": 1,
+        "maxOutputTokens": 65535,
+        "topP": 0.95,
+        "thinkingConfig": {
+            "thinkingBudget": 0
+        }
+    },
+    "safetySettings": [
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "OFF"
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "OFF"
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "OFF"
+        },
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "OFF"
+        }
+    ],
+    "tools": [
+        {
+            "retrieval": {
+                "vertexRagStore": {
+                    "ragResources": [
+                        {
+                            "ragCorpus": "projects/pivotal-biplane-472717-c1/locations/europe-west4/ragCorpora/2305843009213693952"
+                        }
+                    ],
+                    "ragRetrievalConfig": {}
+                }
+            }
+        }
+    ]
+}

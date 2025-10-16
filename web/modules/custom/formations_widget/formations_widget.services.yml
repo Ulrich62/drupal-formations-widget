@@ -1,0 +1,8 @@
+services:
+  formations_widget.oo2_client:
+    class: 'Drupal\formations_widget\Service\Oo2Client'
+    arguments: ['@http_client', '@cache.default', '@config.factory']
+  
+  formations_widget.vector_rag:
+    class: 'Drupal\formations_widget\Service\VectorRagService'
+    arguments: ['@database', '@http_client', '@cache.default', '@config.factory', '@formations_widget.oo2_client']
