@@ -1,7 +1,53 @@
-vendor/
-node_modules/
+# Drupal core
+web/core/
+web/modules/contrib/
+web/themes/contrib/
+web/libraries/
+web/profiles/contrib/
+
+# Drupal files
 web/sites/default/files/
 web/sites/default/settings.local.php
 web/sites/default/settings.php
-.env
+web/sites/default/services.yml
+
+# Composer
+vendor/
+composer.lock
+
+# Node modules
+node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
 *.log
+web/sites/default/files/logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Backup files
+*.bak
+*.backup
+
+# Cache
+web/sites/default/files/php/
+web/sites/default/files/css/
+web/sites/default/files/js/
