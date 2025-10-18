@@ -153,7 +153,7 @@ class FormationsWidgetController extends ControllerBase implements ContainerInje
   public function embed(): Response {
     // Récupérer l'URL de base de l'API FastAPI depuis la configuration
     $config = $this->config('formations_widget.settings');
-    $fastapiBaseUrl = $config->get('fastapi_base_url') ?? 'http://localhost:8000';
+    $fastapiBaseUrl = $config->get('fastapi_base_url') ?? 'https://denemlabs-trial-78.localcan.dev/';
     
     // Version 2.0 - Interface moderne - Input fixé en bas
     $version = time();
@@ -162,7 +162,7 @@ class FormationsWidgetController extends ControllerBase implements ContainerInje
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assistant oo2</title>
+  <title>Assistant Oo2</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { 
@@ -229,19 +229,35 @@ class FormationsWidgetController extends ControllerBase implements ContainerInje
       margin: 8px 0;
       color: #666;
     }
+    
+    .markdown-content a {
+      color: #667eea;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    
+    .markdown-content a:hover {
+      color: #5a67d8;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body style="height:100%;margin:0;padding:0;overflow:hidden;">
 <div id="fw-app-v2-' . $version . '" style="display:flex;flex-direction:column;height:100%;width:100%;background:#fff;position:fixed;top:0;left:0;right:0;bottom:0;">
    <!-- Header avec avatar et nom -->
-   <div style="display:flex;align-items:center;padding:16px 20px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);flex-shrink:0;">
-     <div style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin-right:12px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-       <span style="font-size:18px;">🤖</span>
+   <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);flex-shrink:0;">
+     <div style="display:flex;align-items:center;">
+       <div style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin-right:12px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+         <span style="font-size:18px;">🤖</span>
+       </div>
+       <div>
+         <div style="font-weight:600;font-size:16px;">Assistant Oo2</div>
+         <div style="font-size:12px;opacity:0.8;">En ligne</div>
+       </div>
      </div>
-     <div>
-       <div style="font-weight:600;font-size:16px;">Assistant oo2</div>
-       <div style="font-size:12px;opacity:0.8;">En ligne</div>
-     </div>
+     <button id="fw-reset-conversation" style="background:rgba(255,255,255,0.2);border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:12px;transition:background 0.2s;" onmouseover="this.style.background=\'rgba(255,255,255,0.3)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.2)\'" title="Nouvelle conversation">
+       🔄
+     </button>
    </div>
    
    <!-- Zone de chat avec design moderne -->
@@ -264,13 +280,52 @@ class FormationsWidgetController extends ControllerBase implements ContainerInje
 <script>
 (function(){
    const params=new URLSearchParams(location.search);
-   const apiBase=params.get(\'api\') || \'https://24b727fa91d4.ngrok-free.app\';
+   const apiBase=params.get(\'api\') || \'https://denemlabs-trial-78.localcan.dev\';
    console.log("API Base URL utilisée:", apiBase);
    const chat=document.getElementById("fw-chat-v2");
+   
+   // Gestion de la conversation avec localStorage
+   const CONVERSATION_KEY = \'fw_conversation_history\';
+   let conversationHistory = [];
+   
+   // Charger l\'historique de conversation
+   function loadConversationHistory() {
+     try {
+       const stored = localStorage.getItem(CONVERSATION_KEY);
+       if (stored) {
+         conversationHistory = JSON.parse(stored);
+         console.log("Historique chargé:", conversationHistory.length, "messages");
+       }
+     } catch (e) {
+       console.error("Erreur lors du chargement de l\'historique:", e);
+       conversationHistory = [];
+     }
+   }
+   
+   // Sauvegarder l\'historique de conversation
+   function saveConversationHistory() {
+     try {
+       localStorage.setItem(CONVERSATION_KEY, JSON.stringify(conversationHistory));
+       console.log("Historique sauvegardé:", conversationHistory.length, "messages");
+     } catch (e) {
+       console.error("Erreur lors de la sauvegarde de l\'historique:", e);
+     }
+   }
+   
+   // Réinitialiser la conversation
+   function resetConversation() {
+     conversationHistory = [];
+     localStorage.removeItem(CONVERSATION_KEY);
+     chat.innerHTML = \'\';
+     addMessage("assistant", "👋 Bonjour ! Comment puis-je vous aider ?");
+     console.log("Conversation réinitialisée");
+   }
    
    // Fonction simple de rendu Markdown
    function renderMarkdown(text) {
      return text
+       // URLs cliquables
+       .replace(/(https?:\\/\\/[^\\s]+)/g, \'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>\')
        // Headers
        .replace(/^### (.*$)/gim, \'<h3>$1</h3>\')
        .replace(/^## (.*$)/gim, \'<h2>$1</h2>\')
@@ -314,14 +369,41 @@ class FormationsWidgetController extends ControllerBase implements ContainerInje
        messageDiv.style.justifyContent="flex-start";
        const avatar=\'<div style="width:32px;height:32px;border-radius:50%;background:#667eea;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;"><span style="font-size:14px;">🤖</span></div>\';
        const messageContent = isTyping ? text : renderMarkdown(text);
-       messageDiv.innerHTML=avatar+\'<div style="background:#fff;color:#334155;padding:12px 16px;border-radius:18px 18px 18px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.1);word-wrap:break-word;" class="markdown-content">\'+messageContent+\'</div>\';
+       messageDiv.innerHTML=avatar+\'<div style="background:#fff;color:#334155;padding:12px 16px;border-radius:18px 18px 18px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.1);word-wrap:break-word;max-width:88%;" class="markdown-content">\'+messageContent+\'</div>\';
      }
      chat.appendChild(messageDiv);
+     
+     // Ajouter à l\'historique si ce n\'est pas un message de typing
+     if (!isTyping) {
+       conversationHistory.push({ role: role, content: text, timestamp: Date.now() });
+       saveConversationHistory();
+     }
+     
      return messageDiv;
    }
    
-   // Ajouter le message de bienvenue comme un vrai message du bot
-   addMessage("assistant", "👋 Bonjour ! Comment puis-je vous aider ?");
+   // Restaurer l\'historique de conversation
+   function restoreConversationHistory() {
+     if (conversationHistory.length === 0) {
+       addMessage("assistant", "👋 Bonjour ! Comment puis-je vous aider ?");
+       return;
+     }
+     
+     conversationHistory.forEach(msg => {
+       addMessage(msg.role, msg.content);
+     });
+   }
+   
+   // Initialisation
+   loadConversationHistory();
+   restoreConversationHistory();
+  
+  // Événement pour le bouton de réinitialisation
+  document.getElementById("fw-reset-conversation").addEventListener("click", () => {
+    if (confirm("Êtes-vous sûr de vouloir commencer une nouvelle conversation ? L\'historique actuel sera perdu.")) {
+      resetConversation();
+    }
+  });
   
   document.getElementById("fw-send").addEventListener("click", async ()=>{
     const q=document.getElementById("fw-q-v2").value.trim();
@@ -340,12 +422,22 @@ class FormationsWidgetController extends ControllerBase implements ContainerInje
     
     try{
       console.log("Tentative de connexion à :", apiBase+"/chat");
+      
+      // Construire le contexte JSON avec l\'historique de conversation
+      let questionWithContext = q;
+      if (conversationHistory.length > 0) {
+        const contextJson = JSON.stringify(conversationHistory, null, 2);
+        questionWithContext = q + "\\n\\nCONTEXTE DE LA CONVERSATION:\\n```json\\n" + contextJson + "\\n```";
+      }
+      
       const r=await fetch(apiBase+"/chat",{
         method:"POST",
         headers:{
           "Content-Type":"application/json"
         },
-        body: JSON.stringify({question:q})
+        body: JSON.stringify({
+          question: questionWithContext
+        })
       });
       
       clearInterval(loadingInterval);
@@ -467,6 +559,9 @@ class FormationsWidgetController extends ControllerBase implements ContainerInje
       
       $systemPrompt .= "\nUtilise ces informations pour répondre précisément aux questions sur les formations et sessions.";
     }
+    
+    // Ajouter des instructions pour l'historique de conversation
+    $systemPrompt .= "\n\nSi l'utilisateur fournit un contexte de conversation précédente en JSON, utilise-le pour maintenir la cohérence et répondre en tenant compte de l'historique.";
     
     try {
       $client = \Drupal::httpClient();
