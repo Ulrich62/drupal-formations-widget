@@ -1,0 +1,10 @@
+widget:
+  version: 1.x
+  css:
+    theme:
+      css/widget.css: {}
+  js:
+    js/widget.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
